@@ -1,6 +1,8 @@
 # check=skip=FromPlatformFlagConstDisallowed
-# Unified arm64 image: native SESC (from jsachs123/sesc) + the exact i386
-# MIPS cross toolchain bytes from jsachs123/cs6290, run via binfmt/qemu.
+# Unified arm64 image for OMSCS CS6290: native SESC (from jsachs123/sesc) plus the
+# unmodified i386 MIPS cross toolchain from jsachs123/cs6290. The i386 tools run through
+# qemu-i386-static wrappers, so plain `mips-unknown-linux-gnu-gcc` just works on any
+# arm64 Docker host (Docker Desktop, OrbStack, Colima, ...).
 FROM --platform=linux/amd64 jsachs123/cs6290@sha256:57753f1da851b2e7f165a6624879f356f405b0cb97771efc31ee1c2fb0a5336e AS x86
 
 FROM --platform=linux/arm64 jsachs123/sesc@sha256:a99fa07d63689f2776be45173543e0d0fad5d59c63d1ad83a5d792384d96f6fe
@@ -18,5 +20,7 @@ RUN if [ "$USE_QEMU" = 1 ]; then \
       && rm -rf /var/lib/apt/lists/* && sh /usr/local/sbin/wrap-i386.sh /mipsroot/cross-tools ; \
     fi
 ENV PATH=${PATH}:/mipsroot/cross-tools/bin
+LABEL org.opencontainers.image.source="https://github.com/kinginu/cs6290-apple-silicon" \
+      org.opencontainers.image.description="Single-container SESC + MIPS cross compiler for CS6290 on Apple Silicon"
 USER cs6290
 WORKDIR /home/cs6290
