@@ -1,0 +1,17 @@
+# Single container: build SESC, cross-compile MIPS benchmarks, and simulate.
+name: cs6290
+services:
+  cs6290:
+    image: ghcr.io/kinginu/cs6290-unified:latest
+    # Or build it yourself:  build: .
+    platform: linux/arm64
+    container_name: cs6290
+    working_dir: /home/cs6290
+    tty: true
+    stdin_open: true
+    volumes:
+      # A fresh named volume is seeded from the image, so /home/cs6290/sesc
+      # (SESC source + Splash2) appears automatically on first start.
+      - cs6290-home:/home/cs6290
+volumes:
+  cs6290-home:
