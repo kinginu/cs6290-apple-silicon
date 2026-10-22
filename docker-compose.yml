@@ -1,0 +1,19 @@
+# One container: build SESC, cross-compile MIPS benchmarks, and simulate.
+# The image is built locally from the course VM (see README): run ./extract-vm.sh
+# first, then `docker compose up -d --build`. The ghcr.io name is only where the
+# repo owner keeps a private copy of the built image (it contains course material).
+name: cs6290
+services:
+  cs6290:
+    image: ghcr.io/kinginu/cs6290-unified:latest
+    build: .
+    container_name: cs6290
+    working_dir: /home/cs6290
+    tty: true
+    stdin_open: true
+    volumes:
+      # A fresh named volume is seeded from the image, so /home/cs6290/sesc
+      # (SESC source + Splash2) appears automatically on first start.
+      - cs6290-home:/home/cs6290
+volumes:
+  cs6290-home:
